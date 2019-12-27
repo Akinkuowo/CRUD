@@ -1,7 +1,8 @@
 import React from 'react';
 import './app.css';
 
-import 'bulma/css/bulma.css'
+import axios from 'axios';
+
 
 
 import ListItem from './components/ListItem/ListItem.js'
@@ -20,16 +21,17 @@ class App extends React.Component {
 			todos: []
 		}
 
-		
+		this.apiUrl = 'http://5e053efa2f5dff0014f7da10.mockapi.io';
+		this.handleUpdateTodo = this.handleUpdateTodo.bind(this)	
 	};
 
 	async componentDidMount(){
-		fetch('http://localhost:3100/todos')
-		.then(Response => Response.json())
-		.then(console.log)
-		// // this.setState({
-		// // 	todos: Response.data
-		// // })
+		const response = await axios.get(`${this.apiUrl}/todos`);
+ 
+
+		this.setState({
+			 todos: response.data
+		});
 	}
 	
 
@@ -39,26 +41,15 @@ class App extends React.Component {
 		})
 	}
 
-	generateTodoId = () => {
-		const todoId = this.state.todos[this.state.todos.length - 1];
-
-		if (todoId) {
-			return todoId + 1;
-		}else{
-			return 1;
-		}
-
-	}
-
-	handleOnClick = () => {
-		const newTodos = {
+	async handleOnClick() {
+	
+		const response = await axios.post(`${this.apiUrl}/todos`, {
 			name: this.state.newTodos,
-			id: this.generateTodoId()
-		}
+		}); 
 
 		const oldTodos = this.state.todos;
 
-		oldTodos.push(newTodos);
+		oldTodos.push(response.data);
 
 		this.setState({
 			todos: oldTodos,
@@ -67,7 +58,7 @@ class App extends React.Component {
 		this.handleAlert('Todo Created Successfully!')
 	}
 
-	handleEditTodo = (index) =>{
+	handleEditTodo (index){
 		const todos = this.state.todos[index];
 
 		this.setState({
@@ -75,17 +66,22 @@ class App extends React.Component {
 			newTodos: todos.name,
 			editingIndex: index
 		})
-		console.log(this.state.editingIndex)
+		 
 	}
 
-	handleUpdateTodo = () => {
+	async handleUpdateTodo () {
+		
 		const todo = this.state.todos[this.state.editingIndex];
 
-		todo.name = this.state.newTodos;
+
+		const response = await axios.put(`${this.apiUrl}/todos/${todo.id}`, {
+			name: this.state.newTodos
+		})	
+
 
 		const todos = this.state.todos;
 
-		todos[this.state.editingIndex] = todo;
+		todos[this.state.editingIndex] = response.data;
 
 		this.setState({ 
 			todos, 
@@ -97,11 +93,17 @@ class App extends React.Component {
 		this.handleAlert('Todo Updated Successfully!')
 	}
 
-	handleDeleteTodo = (index)=> {
+	async handleDeleteTodo(index) {
 		const todos = this.state.todos
-		delete todos[index]
+
+		const todo = todos[index]; 
+
+		await axios.delete(`${this.apiUrl}/todos/${todo.id}`);
+
+		delete todos[index];
 
 		this.setState({ todos })
+
 		this.handleAlert('Todo Deleted Successfully!')
 	}
 
@@ -120,7 +122,7 @@ class App extends React.Component {
 
 
 	render(){
-		console.log(this.state.newTodos)
+		
 		return (
 			<div className="App">
 				
