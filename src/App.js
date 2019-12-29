@@ -27,7 +27,7 @@ class App extends React.Component {
 			loading: true
 		}
 
-		this.apiUrl = 'https:
+		this.apiUrl = 'http:
 //5e053efa2f5dff0014f7da10.mockapi.io';
 		
 		this.handleUpdateTodo = this.handleUpdateTodo.bind(this)	
