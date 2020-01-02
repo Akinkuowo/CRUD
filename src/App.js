@@ -27,12 +27,11 @@ class App extends React.Component {
 			loading: true
 		}
 
-		this.apiUrl = 'https:
-//5e053efa2f5dff0014f7da10.mockapi.io';
+		this.apiUrl = 'https://5e053efa2f5dff0014f7da10.mockapi.io';
 		
-		this.handleUpdateTodo = this.handleUpdateTodo.bind(this)	
+		this.handleUpdateTodo = this.handleUpdateTodo.bind(this);	
 
-		this.handleOnClick = this.handleOnClick.bind(this)	
+		this.handleOnClick = this.handleOnClick.bind(this);	
 
 	};
 
